@@ -32,15 +32,22 @@ class Map:
       for i in range(1,len(snakes)):
         body = snakes[i]['body']
         head = body[0]
+        x = head['x']
+        y = head['y']
         self.snakeInfo += [([head['x'], head['y']], snakes[i]['length'])]
         for j in range(len(body)-1):
           self.array[body[j]['x']][body[j]['y']] = -1000
         if snakes[i]['length'] >= self.size:
-          self.array[head['x']+1][head['y']] = -1000
-          self.array[head['x']-1][head['y']] = -1000
-          self.array[head['x']][head['y']+1] = -1000
-          self.array[head['x']][head['y']-1] = -1000
+          if x < self.dimension -1:
+            self.array[head['x']+1][head['y']] = -1000
+          if x > 0:
+            self.array[head['x']-1][head['y']] = -1000
+          if y < self.dimension -1:
+            self.array[head['x']][head['y']+1] = -1000
+          if y > 0:
+            self.array[head['x']][head['y']-1] = -1000
 
+      
       food = board['food']
       for i in range(len(food)):
         closest = True
