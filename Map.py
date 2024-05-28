@@ -4,7 +4,7 @@ import numpy as num
 
 class Map:
     def __init__(self, length):
-      self.array = num.zeros((length, length))
+      self.array = num.zeros((length, length)).astype(int)
       self.dimension = length
       self.turn = 0
       self.health = 100
@@ -29,12 +29,12 @@ class Map:
 
       
       snakes = board['snakes']
-      for i in range(len(snakes)):
+      for i in range(1,len(snakes)):
         body = snakes[i]['body']
         head = body[0]
-        self.snakeInfo += [[head['x'], head['y']], snakes[i]['length']]
+        self.snakeInfo += [([head['x'], head['y']], snakes[i]['length'])]
         for j in range(len(body)-1):
-          self.array[body[i]['x']][body[i]['y']] = -1000
+          self.array[body[j]['x']][body[j]['y']] = -1000
         if snakes[i]['length'] >= self.size:
           self.array[head['x']+1][head['y']] = -1000
           self.array[head['x']-1][head['y']] = -1000
@@ -45,7 +45,6 @@ class Map:
       for i in range(len(food)):
         closest = True
         point = [food[i]['x'], food[i]['y']]
-        self.food += [point[0], point[1]]
         for i in self.snakeInfo:
           if self.distanceToPoint(i[0], point) < self.distanceToPoint(self.head, point):
             closest = False
@@ -55,25 +54,22 @@ class Map:
             break
         if closest:
           self.array[point[0]][point[1]] = 10
+          self.food += [(point[0], point[1])]
         
     def spread(self, point):
-      if 0 <= point[0] <= self.dimension and 0 <= point[1] <= self.dimension and self.array[point[0]][point[1]] == 0:
-        self.array[point[0]+1][point[1]] +=  self.array[point[0]][point[1]]-1
-        self.array[point[0]-1][point[1]] +=  self.array[point[0]][point[1]]-1
-        self.array[point[0]][point[1]+1] +=  self.array[point[0]][point[1]]-1
-        self.array[point[0]][point[1]-1] +=  self.array[point[0]][point[1]]-1
-        self.spread([point[0]+1, point[1]])
-        self.spread([point[0]-1, point[1]])
-        self.spread([point[0], point[1]+1])
-        self.spread([point[0], point[1]-1])
+      x, y = point
+      if self.dimension >= x >= 0 == self.array[x][y] and 0 <= y <= self.dimension:
+        self.array[x+1][y] += self.array[x][y]-1
+        self.array[x-1][y] += self.array[x][y]-1
+        self.array[x][y+1] += self.array[x][y]-1
+        self.array[x][y+1] += self.array[x][y]-1
+        self.spread((x+1, y))
+        self.spread((x-1, y))
+        self.spread((x, y+1))
+        self.spread((x, y-1))
   
     def evaluateMap(self):
-      for i in self.food:
-        self.spread(i)
-          
-        
-
-     
-      
-      
+      if not(len(self.food) > 0):
+        for i in self.food:
+          self.spread(i)
       
