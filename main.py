@@ -14,6 +14,7 @@ import random
 import typing
 import Map
 import time 
+import numpy
 
 # info is called when you create your Battlesnake on play.battlesnake.com
 # and controls your Battlesnake's appearance
@@ -66,6 +67,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
     next_move = moves[0][1]
     print(f"MOVE {game_state['turn']}: {next_move}")
     print(f"Time: {time.time() - starttime}")
+    print(map.array)
     return {"move": next_move}
 
 
