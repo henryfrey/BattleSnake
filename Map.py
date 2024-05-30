@@ -24,7 +24,7 @@ class Map:
       food = board['food']
       for i in range(len(food)):
         self.food.append((food[i]['x'], food[i]['y']))
-        self.array[food[i]['x']][food[i]['y']] = 100
+        self.array[food[i]['x']][food[i]['y']] = 11
 
       snakes = board['snakes']
       for i in range(len(snakes)):
@@ -47,29 +47,29 @@ class Map:
       
       
         
-    def spread(self, point, value):
+    def spread(self, point, value):#Problem: spread funktioniert wie Tiefensuche und nicht Breitensuche; Idee: überschreibe wenn Inhalt geringer als value 
       x, y = point
-      if self.array[x][y] == 0 or self.array[x][y] == value:
+      if value > 0 and (self.array[x][y] == 0 or self.array[x][y] <= value):
         if x < self.dimension -1:
-          if self.array[x+1][y] == 0 or self.array[x+1][y] == value:
-            self.array[x+1][y] += self.array[x][y]-1
+          if self.array[x+1][y] == 0:
+            self.array[x+1][y] = self.array[x][y]-1
             self.spread((x+1, y), value-1)
         if x > 0:
-          if self.array[x-1][y] == 0 or self.array[x-1][y] == value:
-            self.array[x-1][y] += self.array[x][y]-1
+          if self.array[x-1][y] == 0:
+            self.array[x-1][y] = self.array[x][y]-1
             self.spread((x-1, y), value-1)
         if y < self.dimension -1:
-          if self.array[x][y+1] == 0 or self.array[x][y+1] == value:
-            self.array[x][y+1] += self.array[x][y]-1
+          if self.array[x][y+1] == 0:
+            self.array[x][y+1] = self.array[x][y]-1
             self.spread((x, y+1), value-1)
         if y > 0:
-          if self.array[x][y-1] == 0 or self.array[x][y-1] == value:
-            self.array[x][y-1] += self.array[x][y]-1
+          if self.array[x][y-1] == 0:
+            self.array[x][y-1] = self.array[x][y]-1
             self.spread((x, y-1), value-1)
             
   
-    def evaluateMap(self):
+    def evaluateMap(self):  
       if len(self.food) > 0:
         for i in range (len(self.food)):
-          self.spread(self.food[i], 100)
+          self.spread(self.food[i], 11)
       
