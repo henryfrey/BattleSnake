@@ -47,9 +47,10 @@ def end(game_state: typing.Dict):
 def move(game_state: typing.Dict) -> typing.Dict:
     starttime = time.time()
     map = Map.Map(11)
-    map.fillMap(game_state)
-    map.evaluateMap()
-    my_head = map.head
+    map.fillMapData(game_state)
+    map.findStrat()
+    map.finalMapAdjustment()
+    my_head = map.body[0]
     moves = []
     if my_head[0] > 0:
         moves.append([map.array[my_head[0]-1][my_head[1]], "left"])
@@ -68,6 +69,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
     print(f"MOVE {game_state['turn']}: {next_move}")
     print(f"Time: {time.time() - starttime}")
     print(numpy.rot90(map.array, 1, (0,1)))
+    #print(map.snakeData)
     return {"move": next_move}
 
 
